@@ -6,15 +6,24 @@
 /*   By: msuokas <msuokas@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 15:50:36 by msuokas           #+#    #+#             */
-/*   Updated: 2025/10/14 15:05:02 by msuokas          ###   ########.fr       */
+/*   Updated: 2025/10/17 14:54:25 by msuokas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Span.hpp"
 
-Span::Span(): _N(0) {}
+Span::Span(): _N(0) {
+    std::cout << "Default constructor called" << std::endl;
+}
     
-Span::Span(const unsigned int N): _N(N){}
+Span::Span(const long long N) {
+    if (N < 0)
+        throw negativeValue();
+    if (static_cast<unsigned long long>(N) > std::numeric_limits<unsigned int>::max())
+        throw std::overflow_error("Value too large for unsigned int");
+    _N = static_cast<unsigned int>(N);
+    std::cout << "Created with size " << N << std::endl;  
+}
 
 Span::~Span() {}
 
@@ -31,6 +40,10 @@ Span& Span::operator=(const Span& other) {
     return *this;
 }
 
+const char* Span::negativeValue::what() const noexcept {
+    return "cannot construct with negative value.";
+}
+
 const char* Span::maxValuesReached::what() const noexcept {
     return "cannot add more numbers, max values reached.";
 }
@@ -38,6 +51,7 @@ const char* Span::maxValuesReached::what() const noexcept {
 void Span::addNumber(const int n) {
     if (_values.size() >= _N)
         throw maxValuesReached();
+    std::cout << "Adding: " << n << "\n";
     _values.push_back(n);
 }
 
@@ -60,6 +74,7 @@ int Span::longestSpan() {
 }
 
 void Span::printValues() const {
+    std::cout << "Values that were added: ";
     for (auto it = _values.begin(); it != _values.end(); it++) {
         std::cout << *it << " ";
     }
@@ -70,6 +85,7 @@ void Span::addNumbers(std::vector<int>::iterator begin, std::vector<int>::iterat
     if (_values.size() + std::distance(begin, end) > _N)
         throw std::runtime_error("Not enough space in Span to add all numbers");
     for (auto it = begin; it != end; ++it) {
+        std::cout << "Adding: " << *it << "\n";
         _values.push_back(*it);
     }
 }

@@ -2,7 +2,7 @@ CC = c++
 FLAGS = -Wall -Wextra -Werror -std=c++20
 SRC = main.cpp
 OBJ = $(SRC:.cpp=.o)
-NAME = easyfind
+NAME = mutantStack
 RM = rm -f
 
 all: $(NAME)
